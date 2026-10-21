@@ -1,5 +1,7 @@
 # 多伦多，吃什么？
 
+已部署：[打开食单](https://hukairui228.github.io/toronto-table-mvp/) · [代码仓库](https://github.com/hukairui228/toronto-table-mvp)。当前线上为明确的空清单状态。
+
 手机优先、纯静态的私人食单 MVP。Python 标准库负责本机数据流程，原生 HTML/CSS/JS 负责筛选；无需数据库、账号或前端框架。
 
 **当前状态：代码已完成，真实店铺尚未导入。** `data/raw/places.csv` 目前是仅含表头的模板。不要把空清单的 needs_review=0 / unresolved=0 读成“所有店已匹配”。用户后续要求已移除“只看我去过的”。未完成事项见 [QUESTIONS.md](QUESTIONS.md)。
