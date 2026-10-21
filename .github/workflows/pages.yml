@@ -1,0 +1,50 @@
+name: Deploy Toronto Table
+on:
+  push:
+    branches: [main]
+    paths: ['site/**', 'scripts/**', 'tests/**', '.github/workflows/pages.yml']
+  workflow_dispatch:
+  # Rebuild to remove expired API snapshots even when no one visits.
+  schedule:
+    - cron: '17 8 * * *'
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Test pipeline
+        run: python -m unittest discover -s tests -v
+      - name: Test time and filters
+        run: node --test tests/hours.test.mjs
+      - name: Prepare static artifact
+        env:
+          FOOD_DATA_JSON: ${{ secrets.FOOD_DATA_JSON }}
+        run: python scripts/build_site.py --ci
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: artifacts/pages
+          retention-days: 1
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

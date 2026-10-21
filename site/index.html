@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="一份人工挑选的多伦多食单，按时间、菜系和距离找到今天想吃的。">
+  <meta name="color-scheme" content="dark"><meta name="referrer" content="no-referrer">
+  <title>多伦多，吃什么？</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="stylesheet" href="./style.css">
+  <script type="module" src="./app.mjs"></script>
+</head>
+<body>
+  <a class="skip-link" href="#results">跳到食单</a>
+  <header class="masthead"><a class="wordmark" href="./">多伦多食单<span aria-hidden="true"> / </span><small>TORONTO TABLE</small></a><span class="edition">私人清单 · 两周试用</span></header>
+  <main>
+    <section class="intro" aria-labelledby="title"><div><p class="eyebrow">人挑的店，按你的节奏吃。</p><h1 id="title">今天，<br>吃点<span>喜欢的。</span></h1><p class="dek">从一份收藏里，找到这一刻想去的那一家。</p></div><div class="intro-note"><span class="stamp">吃饭这件小事</span><p>先看人的推荐，<br>再看时间与距离。</p><span class="tiny" id="today-label"></span></div></section>
+    <section class="filter-section" aria-label="筛选食单">
+      <form id="filters">
+        <div class="search-line"><label class="search-field"><span class="sr-only">搜索店名、地址、必点或备注</span><span aria-hidden="true">⌕</span><input id="query" name="query" type="search" placeholder="找一家店、一道菜，或一句推荐…" autocomplete="off"></label><button type="reset" class="text-button">重置筛选 ↺</button></div>
+        <div class="primary-filters">
+          <label>什么时候吃<select id="time-mode"><option value="now">现在 · 多伦多时间</option><option value="custom">指定日期与时间</option></select></label>
+          <label id="custom-time-wrap" hidden>多伦多日期时间<input id="custom-time" type="datetime-local"></label>
+          <label>价位<select id="price"><option value="">所有价位</option><option value="PRICE_LEVEL_FREE">免费</option><option value="PRICE_LEVEL_INEXPENSIVE">$ · 便宜</option><option value="PRICE_LEVEL_MODERATE">$$ · 中等</option><option value="PRICE_LEVEL_EXPENSIVE">$$$ · 较贵</option><option value="PRICE_LEVEL_VERY_EXPENSIVE">$$$$ · 很贵</option></select></label>
+          <label>细分菜系<select id="cuisine"><option value="">所有菜系</option></select></label>
+          <label>场景<select id="scenario"><option value="">所有场景</option><option>一个人</option><option>约会</option><option>聚餐</option><option>赶时间</option><option>深夜</option></select></label>
+        </div>
+        <div class="check-line"><label class="check"><input id="open-only" type="checkbox">只看该时间营业</label><label class="check"><input id="include-missing" type="checkbox" checked>菜系 / 场景 / 辣度：包含未填</label><details class="more-filters"><summary>区域、距离与更多 <span aria-hidden="true">＋</span></summary><div class="advanced-grid">
+          <label>区域<select id="region"><option value="">所有区域</option></select></label>
+          <label>辣度<select id="spicy"><option value="">不限辣度</option><option value="0">0 · 不辣</option><option value="1">1 · 微辣</option><option value="2">2 · 中辣</option><option value="3">3 · 很辣</option></select></label>
+          <label>直线距离<select id="distance"><option value="">不限距离</option><option value="1">1 km 内</option><option value="3">3 km 内</option><option value="5">5 km 内</option><option value="10">10 km 内</option><option value="25">25 km 内</option></select></label>
+          <label>排序<select id="sort"><option value="source">清单顺序</option><option value="distance">距离从近到远</option></select></label>
+          <div class="origin"><p>距离起点 <span id="origin-label">UofT St. George · 近似校区中心</span></p><div class="origin-fields"><label>纬度<input id="latitude" type="number" step="any" min="-90" max="90" value="43.6629"></label><label>经度<input id="longitude" type="number" step="any" min="-180" max="180" value="-79.3957"></label><button type="button" id="apply-origin">应用起点</button><button type="button" id="locate" class="secondary">使用我的位置</button></div><small>直线距离不等于步行时间。定位仅在本页内存使用，不发送给统计服务。</small></div>
+          <label class="check"><input id="unknown-hours" type="checkbox">营业时间未知也显示</label><label class="check"><input id="show-skipped" type="checkbox">显示已标记“不再推荐”的店</label>
+        </div></details></div>
+        <p id="form-message" role="status" class="form-message"></p>
+      </form>
+    </section>
+    <section id="results" aria-labelledby="result-heading" tabindex="-1"><div class="result-bar"><h2 id="result-heading">今天的选择 <span id="result-count">—</span></h2><p id="result-context">正在读取食单…</p></div><p id="data-notice" class="notice" hidden></p><div id="cards" class="cards" aria-live="polite" aria-atomic="false"></div><div id="empty" class="empty" hidden><span class="empty-index">00 /</span><h3 id="empty-title">食单正在准备中</h3><p id="empty-description">店铺清单导入后，就可以在这里按口味和时间挑选。</p><button id="clear-empty" type="button" hidden>清除筛选</button></div></section>
+  </main>
+  <footer><div class="footer-brand">好好选一家，<br>好好吃一顿。</div><div><p>清单来源：<a id="source-link" href="https://maps.app.goo.gl/imnqaBn4KQNFb7wD9" target="_blank" rel="noopener noreferrer"><span id="source-author">【待填写作者名】</span>的公开 Google Maps 收藏</a></p><p>列表作者备注与我的评价分别标注；营业信息可能临时变化，出发前请核实。</p><p><a href="./privacy.html">隐私说明</a> · <a href="./terms.html">使用说明</a> <span id="analytics-status">· 统计未启用</span></p><p id="updated-at"></p></div></footer>
+  <noscript><p>请启用 JavaScript，才能读取店铺与使用筛选。</p></noscript>
+</body></html>
