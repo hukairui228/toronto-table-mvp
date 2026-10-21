@@ -35,7 +35,7 @@ function filters() {return {query:$('query').value.trim(),openOnly:$('open-only'
   region:$('region').value,maxDistance:$('distance').value,origin,includeMissing:$('include-missing').checked,
   includeUnknownHours:$('unknown-hours').checked,showSkipped:$('show-skipped').checked};}
 function addNote(card,label,value,cls='') {
-  const box=el('section',`human-note ${cls}`);box.append(el('span','source-label',label),el('p',value||'未填'));card.append(box);
+  const box=el('section',`human-note ${cls}`);box.append(el('span','source-label',label),el('p','',value||'未填'));card.append(box);
 }
 function card(place,index,f) {
   const node=el('article','place-card');const g=liveGoogle(place)?.data;

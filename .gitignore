@@ -17,3 +17,7 @@ site/data.json
 artifacts/
 
 .venv/
+
+xhs/*.csv
+!xhs/labeling_template.csv
+xhs/*.json
